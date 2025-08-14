@@ -5,9 +5,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
 import static api.Constants.*;
@@ -34,15 +36,10 @@ public class Calls {
      * deletes projects in bulk
      * @param projectKeys is a comma-separated list of project keys formatted as a single string
      */
-    public void bulk_delete(String projectKeys) {
-        HttpRequest.Builder requestBuilder = buildDefaultRequestTemplate();
+    public HttpResponse<String> bulk_delete(String projectKeys) {
+        String formData = PROJECT_PARAM + projectKeys;
 
-        String formData = "projects=" + projectKeys;
-
-        HttpRequest request = requestBuilder
-                .uri(URI.create(baseUrl + API_PROJECTS_BULK_DELETE))
-                .POST(HttpRequest.BodyPublishers.ofString(formData))
-                .build();
+        return sendSimplePostRequest(formData, API_PROJECTS_BULK_DELETE);
     }
 
     /**
@@ -50,39 +47,92 @@ public class Calls {
      * @param projectKey
      * @param projectName
      */
-    public String create(String projectKey, String projectName) {
-        HttpRequest.Builder requestBuilder = buildDefaultRequestTemplate();
+    public HttpResponse<String> create(String projectKey, String projectName) {
+        String formData = PROJECT_PARAM + projectKey + "&" + NAME_PARAM + projectName;
 
-        String formData = "project=" + projectKey + "&name=" + projectName;
-
-        HttpRequest request = requestBuilder
-                .uri(URI.create(baseUrl + API_PROJECTS_CREATE))
-                .POST(HttpRequest.BodyPublishers.ofString(formData))
-                .build();
-
-        return sendRequest(request);
+        return sendSimplePostRequest(formData, API_PROJECTS_CREATE);
     }
 
-    public String delete(String projectKey) {
-        String formData = "project=" + projectKey;
-        HttpRequest.Builder requestBuilder = buildDefaultRequestTemplate();
+    /**
+     * Deletes a single, specified project
+     * @param projectKey
+     * @return API response
+     */
+    public HttpResponse<String> delete(String projectKey) {
+        String formData = PROJECT_PARAM + projectKey;
 
-        HttpRequest request = requestBuilder
-                .uri(URI.create(baseUrl + API_PROJECTS_BULK_DELETE))
-                .POST(HttpRequest.BodyPublishers.ofString(formData))
-                .build();
-
-        return sendRequest(request);
-
+        return sendSimplePostRequest(formData, API_PROJECTS_DELETE);
     }
 
-    public void export_findings() {}
-    public void get_contains_ai_code() {}
-    public void license_usage() {}
-    public void search() {}
-    public void set_contains_ai_code() {}
-    public void update_key() {}
-    public void update_visibility() {}
+    /**
+     * Exports all findings of a specific project branch
+     * @param projectKey
+     * @return API response
+     */
+    public HttpResponse<String> export_findings(String projectKey) {
+        URI uri = URI.create(baseUrl + API_PROJECTS_EXPORT_FINDINGS)
+                .resolve("?" + PROJECT_PARAM + URLEncoder.encode(projectKey, StandardCharsets.UTF_8));
+
+        return sendGetRequest(uri);
+    }
+
+    /**
+     * Gets a boolean value for whether the project contains AI code
+     * @param projectKey
+     * @return API response
+     */
+    public HttpResponse<String> get_contains_ai_code(String projectKey) {
+        URI uri = URI.create(baseUrl + API_PROJECTS_GET_CONTAINS_AI_CODE)
+                .resolve("?" + PROJECT_PARAM + projectKey);
+
+        return sendGetRequest(uri);
+    }
+
+    /**
+     * Gets license usage metadata broken down per project
+     * @return API response
+     */
+    public HttpResponse<String> license_usage() {
+        URI uri = URI.create(baseUrl + API_PROJECTS_LICENSE_USAGE);
+
+        return sendGetRequest(uri);
+    }
+
+    /**
+     * Gets matadata about existing sonarQube projects
+     * @param projects comma-separated list of project keys formatted as a single String
+     * @return API response
+     */
+    public HttpResponse<String> search(String projects) {
+        URI uri = URI.create(baseUrl + API_PROJECTS_SEARCH)
+                .resolve("?" + PROJECTS_PARAM + projects);
+
+        return sendGetRequest(uri);
+    }
+
+    /**
+     * Sets the contains ai code value in a project's metadata
+     * @param projectKey
+     * @param contains_ai_code true or false passed as a String
+     * @return API response
+     */
+    public HttpResponse<String> set_contains_ai_code(String projectKey, String contains_ai_code) {
+        String formData = PROJECT_PARAM + projectKey + "&" + CONTAINS_AI_CODE_PARAM + contains_ai_code;
+
+        return sendSimplePostRequest(formData, API_PROJECTS_SET_CONTAINS_AI_CODE);
+    }
+
+    public HttpResponse<String> update_key(String fromKey, String toKey) {
+        String formData = FROM_PARAM + fromKey + "&" + TO_PARAM + toKey;
+
+        return sendSimplePostRequest(formData, API_PROJECTS_UPDATE_KEY);
+    }
+
+    public HttpResponse<String> update_visibility(String projectKey, String visibility) {
+        String formData = PROJECT_PARAM + projectKey + "&" + VISIBILITY_PARAM + visibility;
+
+        return sendSimplePostRequest(formData, API_PROJECTS_UPDATE_VISIBILITY);
+    }
 
     private HttpRequest.Builder buildDefaultRequestTemplate() {
         return HttpRequest.newBuilder()
@@ -91,15 +141,37 @@ public class Calls {
                 .timeout(timeout);
     }
 
-    private String sendRequest(HttpRequest request) {
+    private HttpResponse<String> sendGetRequest(URI uri) {
+        HttpRequest.Builder requestBuilder = buildDefaultRequestTemplate();
+
+        HttpRequest request = requestBuilder
+                .uri(uri)
+                .GET()
+                .build();
+
+        return sendRequest(request);
+    }
+
+    private HttpResponse<String> sendSimplePostRequest(String formData, String endpointPath) {
+        HttpRequest.Builder requestBuilder = buildDefaultRequestTemplate();
+
+        HttpRequest request = requestBuilder
+                .uri(URI.create(baseUrl + endpointPath))
+                .POST(HttpRequest.BodyPublishers.ofString(formData))
+                .build();
+
+        return sendRequest(request);
+    }
+
+    private HttpResponse<String> sendRequest(HttpRequest request) {
         try {
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            return response.body();
+            return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         } catch (IOException | InterruptedException e) {
             logger.error(REQUEST_FAILED, e);
             throw new RuntimeException(e);
         }
     }
+
 
 }

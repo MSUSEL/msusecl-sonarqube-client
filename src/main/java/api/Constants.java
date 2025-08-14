@@ -20,4 +20,14 @@ public class Constants {
 
     // logging constants
     public static String REQUEST_FAILED = "The HTTP Request failed with the following error: ";
+
+    // request parameters
+    public static String PROJECT_PARAM = "project=";
+    public static String PROJECTS_PARAM = "projects=";
+    public static String NAME_PARAM = "name=";
+    public static String CONTAINS_AI_CODE_PARAM = "contains_ai_code=";
+    public static String FROM_PARAM = "from=";
+    public static String TO_PARAM = "to=";
+    public static String VISIBILITY_PARAM = "visibility=";
+
 }
