@@ -9,10 +9,14 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Use this class to customize calls. Default calls elsewhere in this client use only
+ * the required parameters. To customize those calls simply extend the relevant Calls class
+ * and override the specific call method using this builder.
+ */
 public class AdvancedRequestBuilder {
     private final HttpClient httpClient;
     private final String baseUrl;
-    private final String token;
     private String endpoint;
     private final Map<String, String> queryParams = new HashMap<>();
     private final Map<String, String> headers = new HashMap<>();
@@ -22,9 +26,22 @@ public class AdvancedRequestBuilder {
     public AdvancedRequestBuilder(HttpClient client, String baseUrl, String token) {
         this.httpClient = client;
         this.baseUrl = baseUrl;
-        this.token = token;
+
         // Set default headers
         this.headers.put("Authorization", "Bearer " + token);
+        this.headers.put("Accept", "application/json");
+    }
+
+    /**
+     * Handles the case that user has authenticated with login and password through the api
+     * @param client
+     * @param baseUrl
+     */
+    public AdvancedRequestBuilder(HttpClient client, String baseUrl) {
+        this.httpClient = client;
+        this.baseUrl = baseUrl;
+
+        // Set default headers
         this.headers.put("Accept", "application/json");
     }
 
