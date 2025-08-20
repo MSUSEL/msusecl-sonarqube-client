@@ -26,6 +26,9 @@ public class Constants {
     // api/issues endpoints
     public static String API_ISSUES_SEARCH = "/api/issues/search";
 
+    // api/hotspots endpoints
+    public static String API_HOTSPOTS_CHANGE_STATUS = "/api/hotspots/change_status";
+
     // logging constants
     public static String REQUEST_FAILED = "The HTTP Request failed with the following error: ";
 
@@ -39,4 +42,5 @@ public class Constants {
     public static String VISIBILITY_PARAM = "visibility=";
     public static String LOGIN_PARAM = "login=";
     public static String PASSWORD_PARAM = "password=";
+    public static String STATUS_PARAM = "status=";
 }

@@ -23,6 +23,12 @@ public class ProjectsCalls extends BaseCalls {
         this.simpleRequest = new SimpleRequest(httpClient, baseUrl, token, timeout);
     }
 
+    public ProjectsCalls(HttpClient httpClient, String baseUrl) {
+        super(httpClient, baseUrl);
+
+        this.simpleRequest = new SimpleRequest(httpClient, baseUrl, timeout);
+    }
+
     /**
      * Deletes projects in bulk
      * @param projectKeys is a comma-separated list of project keys formatted as a single string

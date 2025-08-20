@@ -1,16 +1,22 @@
 package api.hotspots;
 
+import api.AdvancedRequestBuilder;
 import api.BaseCalls;
 import api.SimpleRequest;
 
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
+import java.util.Map;
+
+import static api.Constants.API_HOTSPOTS_CHANGE_STATUS;
+import static api.Constants.STATUS_PARAM;
 
 /**
  * Hit SonarQube's api/hotspots/* endpoints
  */
 public class HotspotsCalls extends BaseCalls {
     private final SimpleRequest simpleRequest;
+    private final AdvancedRequestBuilder builder;
 
     /**
      * For use with bearer token authentication
@@ -22,6 +28,7 @@ public class HotspotsCalls extends BaseCalls {
         super(httpClient, baseUrl, token);
 
         this.simpleRequest = new SimpleRequest(httpClient, baseUrl, token, timeout);
+        this.builder = new AdvancedRequestBuilder(httpClient, baseUrl, token);
     }
 
     /**
@@ -33,9 +40,24 @@ public class HotspotsCalls extends BaseCalls {
         super(httpClient, baseUrl);
 
         this.simpleRequest = new SimpleRequest(httpClient, baseUrl, timeout);
+        this.builder = new AdvancedRequestBuilder(httpClient, baseUrl);
     }
 
-    public HttpResponse<String> changeStatus(String hotspotKey, String newStatus) {}
-    public HttpResponse<String> search() {}
+    /**
+     * Change the status of a Security Hotspot
+     * Requires the 'Administer Security Hotspot' permission
+     * @param hotspotKey
+     * @param newStatus
+     * @return API response
+     */
+    public HttpResponse<String> changeStatus(String hotspotKey, String newStatus) {
+        String formData = STATUS_PARAM + newStatus;
+
+        return simpleRequest.sendPostRequest(formData, API_HOTSPOTS_CHANGE_STATUS);
+    }
+
+    public HttpResponse<String> search(Map<String, String> params) {
+        for
+    }
     public HttpResponse<String> show(){}
 }

@@ -21,17 +21,31 @@ public class IssuesCalls extends BaseCalls {
     private static final Logger logger = LoggerFactory.getLogger(IssuesCalls.class);
     private final SimpleRequest simpleRequest;
     private final Map<String, String> parameters = new HashMap<>();
+    private final AdvancedRequestBuilder builder;
 
+    /**
+     * For use with bearer token based authentication
+     * @param httpClient
+     * @param baseUrl
+     * @param token
+     */
     public IssuesCalls(HttpClient httpClient, String baseUrl, String token) {
         super(httpClient, baseUrl, token);
 
         this.simpleRequest = new SimpleRequest(httpClient, baseUrl, token, timeout);
+        this.builder = new AdvancedRequestBuilder(httpClient, baseUrl, token);
     }
 
+    /**
+     * For use with login/password authentication
+     * @param httpClient
+     * @param baseUrl
+     */
     public IssuesCalls(HttpClient httpClient, String baseUrl) {
         super(httpClient, baseUrl);
 
         this.simpleRequest = new SimpleRequest(httpClient, baseUrl, timeout);
+        this.builder = new AdvancedRequestBuilder(httpClient, baseUrl);
     }
 
     /**
@@ -41,8 +55,6 @@ public class IssuesCalls extends BaseCalls {
      * @return API Response
      */
     public HttpResponse<String> search(Map<String, String> params) {
-        AdvancedRequestBuilder builder = new AdvancedRequestBuilder(httpClient, baseUrl, token);
-
         for (Map.Entry<String, String> entry : params.entrySet()) {
             builder.param(entry.getKey(), entry.getValue());
         }

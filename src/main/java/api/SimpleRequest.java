@@ -106,9 +106,14 @@ public class SimpleRequest {
     }
 
     private HttpRequest.Builder buildDefaultRequestTemplate(String token, Duration timeout) {
-        return HttpRequest.newBuilder()
-                .header(AUTH, BEARER + " " + token)
-                .header(CONT_TYPE, APP_FORM)
-                .timeout(timeout);
+            HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
+                    .header(CONT_TYPE, APP_FORM)
+                    .timeout(timeout);
+
+            if (!this.token.isEmpty()) {
+                requestBuilder.header(AUTH, BEARER + " " + token);
+            }
+
+            return requestBuilder;
     }
 }
