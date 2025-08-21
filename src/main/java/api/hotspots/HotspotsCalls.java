@@ -1,10 +1,10 @@
 package api.hotspots;
 
 import api.AdvancedBuilderFacade;
-import api.AdvancedRequestBuilder;
 import api.BaseCalls;
 import api.SimpleRequest;
 
+import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
 import java.util.Map;
@@ -56,11 +56,27 @@ public class HotspotsCalls extends BaseCalls {
         return simpleRequest.sendPostRequest(formData, API_HOTSPOTS_CHANGE_STATUS);
     }
 
+    /**
+     * Search for Security Hotspots
+     * @param params a map of search parameters and their values
+     *               Documentation: <a href="https://next.sonarqube.com/sonarqube/web_api/api/hotspots">...</a>
+     * @return API response
+     */
     public HttpResponse<String> search(Map<String, String> params) {
         params.put("method", "POST");
 
         return builderFacade.executeCall(params, API_HOTSPOTS_SEARCH);
     }
 
-    public HttpResponse<String> show(){}
+    /**
+     * Provides the details of a Security Hotspot
+     * @param hotSpotKey
+     * @return API Response
+     */
+    public HttpResponse<String> show(String hotSpotKey) {
+        URI uri = URI.create(baseUrl + API_HOTSPOTS_SHOW)
+                .resolve("?" + HOTSPOT_PARAM + hotSpotKey);
+
+        return simpleRequest.sendGetRequest(uri);
+    }
 }
