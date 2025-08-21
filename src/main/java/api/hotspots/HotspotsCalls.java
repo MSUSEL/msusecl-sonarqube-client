@@ -1,5 +1,6 @@
 package api.hotspots;
 
+import api.AdvancedBuilderFacade;
 import api.AdvancedRequestBuilder;
 import api.BaseCalls;
 import api.SimpleRequest;
@@ -8,15 +9,14 @@ import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
 import java.util.Map;
 
-import static api.Constants.API_HOTSPOTS_CHANGE_STATUS;
-import static api.Constants.STATUS_PARAM;
+import static api.Constants.*;
 
 /**
  * Hit SonarQube's api/hotspots/* endpoints
  */
 public class HotspotsCalls extends BaseCalls {
     private final SimpleRequest simpleRequest;
-    private final AdvancedRequestBuilder builder;
+    private final AdvancedBuilderFacade builderFacade;
 
     /**
      * For use with bearer token authentication
@@ -28,7 +28,7 @@ public class HotspotsCalls extends BaseCalls {
         super(httpClient, baseUrl, token);
 
         this.simpleRequest = new SimpleRequest(httpClient, baseUrl, token, timeout);
-        this.builder = new AdvancedRequestBuilder(httpClient, baseUrl, token);
+        this.builderFacade = new AdvancedBuilderFacade(baseUrl, httpClient, token);
     }
 
     /**
@@ -40,7 +40,7 @@ public class HotspotsCalls extends BaseCalls {
         super(httpClient, baseUrl);
 
         this.simpleRequest = new SimpleRequest(httpClient, baseUrl, timeout);
-        this.builder = new AdvancedRequestBuilder(httpClient, baseUrl);
+        this.builderFacade = new AdvancedBuilderFacade(baseUrl, httpClient);
     }
 
     /**
@@ -57,7 +57,10 @@ public class HotspotsCalls extends BaseCalls {
     }
 
     public HttpResponse<String> search(Map<String, String> params) {
-        for
+        params.put("method", "POST");
+
+        return builderFacade.executeCall(params, API_HOTSPOTS_SEARCH);
     }
+
     public HttpResponse<String> show(){}
 }
