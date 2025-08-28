@@ -28,7 +28,7 @@ public class HotspotsCalls extends BaseCalls {
         super(httpClient, baseUrl, token);
 
         this.simpleRequest = new SimpleRequest(httpClient, baseUrl, token, timeout);
-        this.builderFacade = new AdvancedBuilderFacade(baseUrl, httpClient, token);
+        this.builderFacade = new AdvancedBuilderFacade(httpClient, baseUrl, token);
     }
 
     /**
@@ -40,7 +40,7 @@ public class HotspotsCalls extends BaseCalls {
         super(httpClient, baseUrl);
 
         this.simpleRequest = new SimpleRequest(httpClient, baseUrl, timeout);
-        this.builderFacade = new AdvancedBuilderFacade(baseUrl, httpClient);
+        this.builderFacade = new AdvancedBuilderFacade(httpClient, baseUrl);
     }
 
     /**
