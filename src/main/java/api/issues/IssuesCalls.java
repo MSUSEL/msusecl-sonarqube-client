@@ -1,6 +1,6 @@
 package api.issues;
 
-import api.AdvancedRequestBuilder;
+import api.AdvancedBuilderFacade;
 import api.BaseCalls;
 import api.SimpleRequest;
 import org.slf4j.Logger;
@@ -21,7 +21,7 @@ public class IssuesCalls extends BaseCalls {
     private static final Logger logger = LoggerFactory.getLogger(IssuesCalls.class);
     private final SimpleRequest simpleRequest;
     private final Map<String, String> parameters = new HashMap<>();
-    private final AdvancedRequestBuilder builder;
+    private final AdvancedBuilderFacade builderFacade;
 
     /**
      * For use with bearer token based authentication
@@ -33,7 +33,7 @@ public class IssuesCalls extends BaseCalls {
         super(httpClient, baseUrl, token);
 
         this.simpleRequest = new SimpleRequest(httpClient, baseUrl, token, timeout);
-        this.builder = new AdvancedRequestBuilder(httpClient, baseUrl, token);
+        this.builderFacade = new AdvancedBuilderFacade(httpClient, baseUrl, token);
     }
 
     /**
@@ -45,7 +45,7 @@ public class IssuesCalls extends BaseCalls {
         super(httpClient, baseUrl);
 
         this.simpleRequest = new SimpleRequest(httpClient, baseUrl, timeout);
-        this.builder = new AdvancedRequestBuilder(httpClient, baseUrl);
+        this.builderFacade = new AdvancedBuilderFacade(httpClient, baseUrl);
     }
 
     /**
@@ -55,16 +55,6 @@ public class IssuesCalls extends BaseCalls {
      * @return API Response
      */
     public HttpResponse<String> search(Map<String, String> params) {
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            builder.param(entry.getKey(), entry.getValue());
-        }
-
-        try {
-            return builder.endpoint(baseUrl + API_ISSUES_SEARCH).execute();
-        } catch (Exception e) {
-            logger.error("API request failed to send", e);
-            throw new RuntimeException(e);
-        }
-
+        return builderFacade.executeCall(params, API_ISSUES_SEARCH);
     }
 }

@@ -14,7 +14,7 @@ public class AdvancedBuilderFacade extends BaseCalls {
     private final HttpClient httpClient;
     private final AdvancedRequestBuilder builder;
 
-    public AdvancedBuilderFacade(String baseUrl, HttpClient httpClient, String token) {
+    public AdvancedBuilderFacade(HttpClient httpClient, String baseUrl, String token) {
         super(httpClient, baseUrl, token);
 
         this.token = token;
@@ -23,7 +23,7 @@ public class AdvancedBuilderFacade extends BaseCalls {
         this.builder = new AdvancedRequestBuilder(httpClient, baseUrl, token);
     }
 
-    public AdvancedBuilderFacade(String baseUrl, HttpClient httpClient) {
+    public AdvancedBuilderFacade(HttpClient httpClient, String baseUrl) {
         super(httpClient, baseUrl);
 
         this.baseUrl = baseUrl;
