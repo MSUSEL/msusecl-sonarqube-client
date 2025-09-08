@@ -13,7 +13,7 @@ public class Constants {
 
     // api/projects endpoints
     public static String API_PROJECTS_BULK_DELETE = "/api/projects/bulk_delete";
-    public static String API_PROJECTS_CREATE = "/api/projects/Create";
+    public static String API_PROJECTS_CREATE = "/api/projects/create";
     public static String API_PROJECTS_DELETE = "/api/projects/delete";
     public static String API_PROJECTS_EXPORT_FINDINGS = "/api/projects/export_findings";
     public static String API_PROJECTS_GET_CONTAINS_AI_CODE = "/api/projects/get_contains_ai_code";

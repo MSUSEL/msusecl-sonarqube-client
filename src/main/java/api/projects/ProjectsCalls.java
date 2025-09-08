@@ -4,7 +4,7 @@ import api.BaseCalls;
 import api.SimpleRequest;
 
 import java.net.URI;
-import java.net.URLEncoder;
+import java.net.URLEncoderSystem.getenv("SONAR_QUBE_KEY";
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
