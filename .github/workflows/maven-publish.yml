@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+#      - master
 
 jobs:
   build:
@@ -18,9 +19,8 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
-          server-id: github # This MUST match the server ID in pom.xml
-          settings-path: ${{ github.workspace }} # Location of the settings.xml
+          server-id: github
       - name: Publish package
         run: mvn clean deploy
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ACCESSTOKEN }}
