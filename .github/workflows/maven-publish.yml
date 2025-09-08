@@ -18,7 +18,6 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
-          server-id: github
       - name: Publish package
         run: mvn clean deploy -DskipTests
         env:
