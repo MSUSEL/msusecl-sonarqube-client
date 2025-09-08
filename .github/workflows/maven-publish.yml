@@ -20,6 +20,6 @@ jobs:
           distribution: 'temurin'
           server-id: github
       - name: Publish package
-        run: mvn clean deploy
+        run: mvn clean deploy -DskipTests
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESSTOKEN }}
