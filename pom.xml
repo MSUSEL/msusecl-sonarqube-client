@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>edu.montana.gsoc.msusel</groupId>
-    <artifactId>msusecl-sonarQube-client</artifactId>
+    <artifactId>msusecl-sonarqube-client</artifactId>
     <version>1.1-SNAPSHOT</version>
 
     <properties>
@@ -18,7 +18,7 @@
         <repository>
             <name>SonarQube API Client</name>
             <id>github</id>
-            <url>https://maven.pkg.github.com/MSUSEL/msusecl-sonarQube-client</url>
+            <url>https://maven.pkg.github.com/MSUSEL/msusecl-sonarqube-client</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
