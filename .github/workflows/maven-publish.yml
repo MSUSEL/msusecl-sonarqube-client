@@ -3,7 +3,7 @@ name: Maven Publish
 on:
   push:
     branches:
-      - master
+      - release
 
 jobs:
   build:
