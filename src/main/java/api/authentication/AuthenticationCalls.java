@@ -18,9 +18,9 @@ public class AuthenticationCalls extends BaseCalls {
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationCalls.class);
     private final SimpleRequest simpleRequest;
 
-    public AuthenticationCalls(HttpClient httpClient, String baseUrl, String token) {
-        super(httpClient, baseUrl, token);
-        this.simpleRequest = new SimpleRequest(httpClient, baseUrl, token, timeout);
+    public AuthenticationCalls(HttpClient httpClient, String baseUrl) {
+        super(httpClient, baseUrl);
+        this.simpleRequest = new SimpleRequest(httpClient, baseUrl, timeout);
     }
 
     /**
