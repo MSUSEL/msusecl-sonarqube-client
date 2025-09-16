@@ -1,34 +1,31 @@
 package api;
 
-import api.authentication.AuthenticationCalls;
 import api.hotspots.HotspotsCalls;
 import api.issues.IssuesCalls;
 import api.projects.ProjectsCalls;
 
 import java.net.http.HttpClient;
 
-public class SQClient {
+public class SQClientWithToken {
     private final HttpClient httpClient;
     private final String baseUrl;
+    private final String token;
 
-    private SQClient(HttpClient httpClient, String baseUrl) {
+    private SQClientWithToken(HttpClient httpClient, String baseUrl, String token) {
         this.httpClient = httpClient;
         this.baseUrl = baseUrl;
-    }
-
-    public AuthenticationCalls newAuthenticationCalls() {
-        return new AuthenticationCalls(httpClient, baseUrl);
+        this.token = token;
     }
 
     public HotspotsCalls newHotspotsCalls() {
-        return new HotspotsCalls(httpClient, baseUrl);
+        return new HotspotsCalls(httpClient, baseUrl, token);
     }
 
     public IssuesCalls newIssuesCalls() {
-        return new IssuesCalls(httpClient, baseUrl);
+        return new IssuesCalls(httpClient, baseUrl, token);
     }
 
     public ProjectsCalls newProjectsCalls() {
-        return new ProjectsCalls(httpClient, baseUrl);
+        return new ProjectsCalls(httpClient, baseUrl, token);
     }
 }
