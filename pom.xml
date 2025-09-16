@@ -6,7 +6,7 @@
 
     <groupId>edu.montana.gsoc.msusel</groupId>
     <artifactId>msusecl-sonarqube-client</artifactId>
-    <version>1.3-SNAPSHOT</version>
+    <version>0.0.1</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
