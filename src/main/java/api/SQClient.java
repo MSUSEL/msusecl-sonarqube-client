@@ -34,7 +34,7 @@ public class SQClient {
     private final HttpClient httpClient;
     private final String baseUrl;
 
-    private SQClient(HttpClient httpClient, String baseUrl) {
+    public SQClient(HttpClient httpClient, String baseUrl) {
         this.httpClient = httpClient;
         this.baseUrl = baseUrl;
     }

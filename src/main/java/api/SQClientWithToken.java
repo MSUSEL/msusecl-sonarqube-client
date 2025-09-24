@@ -34,7 +34,7 @@ public class SQClientWithToken {
     private final String baseUrl;
     private final String token;
 
-    private SQClientWithToken(HttpClient httpClient, String baseUrl, String token) {
+    public SQClientWithToken(HttpClient httpClient, String baseUrl, String token) {
         this.httpClient = httpClient;
         this.baseUrl = baseUrl;
         this.token = token;
