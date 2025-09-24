@@ -30,12 +30,11 @@ import api.projects.ProjectsCalls;
 import java.net.http.HttpClient;
 
 public class SQClientWithToken {
-    private final HttpClient httpClient;
+    private final HttpClient httpClient = HttpClient.newHttpClient();
     private final String baseUrl;
     private final String token;
 
-    public SQClientWithToken(HttpClient httpClient, String baseUrl, String token) {
-        this.httpClient = httpClient;
+    public SQClientWithToken(String baseUrl, String token) {
         this.baseUrl = baseUrl;
         this.token = token;
     }
