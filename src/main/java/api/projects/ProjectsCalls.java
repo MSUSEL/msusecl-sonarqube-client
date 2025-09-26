@@ -168,5 +168,5 @@ public class ProjectsCalls extends BaseCalls {
         return simpleRequest.sendPostRequest(formData, API_PROJECTS_UPDATE_VISIBILITY);
     }
 
-    
+
 }
