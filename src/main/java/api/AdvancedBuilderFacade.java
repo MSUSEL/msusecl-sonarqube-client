@@ -66,7 +66,7 @@ public class AdvancedBuilderFacade extends BaseCalls {
         }
 
         try {
-            return builder.endpoint(baseUrl + endpoint).execute();
+            return builder.endpoint(endpoint).execute();
         } catch (Exception e) {
             logger.error("API request failed to send", e);
             throw new RuntimeException(e);
