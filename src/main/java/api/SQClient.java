@@ -31,11 +31,10 @@ import api.projects.ProjectsCalls;
 import java.net.http.HttpClient;
 
 public class SQClient {
-    private final HttpClient httpClient;
+    private final HttpClient httpClient = HttpClient.newHttpClient();
     private final String baseUrl;
 
-    public SQClient(HttpClient httpClient, String baseUrl) {
-        this.httpClient = httpClient;
+    public SQClient(String baseUrl) {
         this.baseUrl = baseUrl;
     }
 
