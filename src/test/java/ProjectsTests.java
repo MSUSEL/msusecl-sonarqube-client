@@ -38,6 +38,7 @@ public class ProjectsTests {
     public void testCreate() {
         HttpResponse<String> response = projectsCalls.create(PROJECT_KEY, PROJECT_NAME);
         System.out.println(response.body());
+        String body = response.body();
         assert response.statusCode() >= 200 && response.statusCode() < 300;
     }
 

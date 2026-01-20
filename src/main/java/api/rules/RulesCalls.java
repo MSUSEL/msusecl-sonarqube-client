@@ -25,9 +25,9 @@ public class RulesCalls extends BaseCalls {
         this.simpleRequest = new SimpleRequest(httpClient, baseUrl, timeout);
     }
 
-    public HttpResponse<String> show(String rule) {
+    public HttpResponse<String> show(String ruleKey) {
         URI uri = URI.create(baseUrl + API_RULES_SHOW)
-                .resolve("?" + RULES_PARAM + rule);
+                .resolve("?" + RULES_PARAM + ruleKey);
 
         return simpleRequest.sendGetRequest(uri);
     }

@@ -28,9 +28,15 @@ import com.google.gson.JsonSyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Serializer {
-    private static final Logger logger = LoggerFactory.getLogger(Serializer.class);
+import java.net.http.HttpResponse;
+
+public class ResponseHandler implements ISerializer {
+    private static final Logger logger = LoggerFactory.getLogger(ResponseHandler.class);
     private final Gson gson = new Gson();
+
+    public boolean checkStatusCode(HttpResponse<String> response) {
+        return response.statusCode() >= 200 && response.statusCode() < 300;
+    }
 
     public <T> String serialize(T businessObj) {
         try {

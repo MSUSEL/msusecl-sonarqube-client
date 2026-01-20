@@ -24,7 +24,7 @@
 package api.projects;
 
 import api.BaseCalls;
-import api.Serializer;
+import api.ResponseHandler;
 import api.SimpleRequest;
 
 import java.net.URI;
@@ -40,7 +40,7 @@ import static api.Constants.*;
  */
 public class ProjectsCalls extends BaseCalls {
     private final SimpleRequest simpleRequest;
-    private final Serializer serializer = new Serializer();
+    private final ResponseHandler responseHandler = new ResponseHandler();
 
     public ProjectsCalls(HttpClient httpClient, String baseUrl, String token) {
         super(httpClient, baseUrl, token);
@@ -167,6 +167,4 @@ public class ProjectsCalls extends BaseCalls {
 
         return simpleRequest.sendPostRequest(formData, API_PROJECTS_UPDATE_VISIBILITY);
     }
-
-
 }
