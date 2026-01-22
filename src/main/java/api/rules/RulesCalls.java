@@ -31,7 +31,7 @@ public class RulesCalls extends BaseCalls {
                 .resolve("?" + RULES_PARAM + ruleKey);
         HttpResponse<String> response = simpleRequest.sendGetRequest(uri);
         logResponseStatusCode(response);
-        
+
         return responseHandler.deserialize(response.body(), Show.class);
     }
 }
