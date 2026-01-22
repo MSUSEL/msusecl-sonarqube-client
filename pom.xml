@@ -142,12 +142,12 @@
     </pluginRepositories>
 
 
-    <distributionManagement>
-        <repository>
-            <id>msusel-maven-repo</id>
-            <name>msusel-maven-repo</name>
-            <url>git:git@github.com:MSUSEL/msusel-maven-repo.git</url>
-        </repository>
-    </distributionManagement>
+<!--    <distributionManagement>-->
+<!--        <repository>-->
+<!--            <id>msusel-maven-repo</id>-->
+<!--            <name>msusel-maven-repo</name>-->
+<!--            <url>git:git@github.com:MSUSEL/msusel-maven-repo.git</url>-->
+<!--        </repository>-->
+<!--    </distributionManagement>-->
 
 </project>
