@@ -40,7 +40,7 @@ public class SimpleRequest {
     private static final Logger logger = LoggerFactory.getLogger(SimpleRequest.class);
     private final HttpClient httpClient;
     private final String baseUrl;
-    private String token = "";
+    private String token;
     private final Duration timeout;
 
     /**

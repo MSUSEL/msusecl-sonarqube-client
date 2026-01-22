@@ -26,6 +26,10 @@ package api.hotspots;
 import api.AdvancedBuilderFacade;
 import api.BaseCalls;
 import api.SimpleRequest;
+import api.hotspots.responseObjects.Search;
+import api.hotspots.responseObjects.Show;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -38,6 +42,7 @@ import static api.Constants.*;
  * Hit SonarQube's api/hotspots/* endpoints
  */
 public class HotspotsCalls extends BaseCalls {
+    private static final Logger LOGGER = LoggerFactory.getLogger(HotspotsCalls.class);
     private final SimpleRequest simpleRequest;
     private final AdvancedBuilderFacade builderFacade;
 
@@ -73,10 +78,13 @@ public class HotspotsCalls extends BaseCalls {
      * @param newStatus
      * @return API response
      */
-    public HttpResponse<String> changeStatus(String hotspotKey, String newStatus) {
+    public boolean changeStatus(String hotspotKey, String newStatus) {
         String formData = STATUS_PARAM + newStatus;
 
-        return simpleRequest.sendPostRequest(formData, API_HOTSPOTS_CHANGE_STATUS);
+        HttpResponse<String> response = simpleRequest.sendPostRequest(formData, API_HOTSPOTS_CHANGE_STATUS);
+        logResponseStatusCode(response);
+
+        return responseHandler.checkSuccess(response);
     }
 
     /**
@@ -85,10 +93,13 @@ public class HotspotsCalls extends BaseCalls {
      *               Documentation: <a href="https://next.sonarqube.com/sonarqube/web_api/api/hotspots">...</a>
      * @return API response
      */
-    public HttpResponse<String> search(Map<String, String> params) {
+    public Search search(Map<String, String> params) {
         params.put("method", "POST");
 
-        return builderFacade.executeCall(params, API_HOTSPOTS_SEARCH);
+        HttpResponse<String> response = builderFacade.executeCall(params, API_HOTSPOTS_SEARCH);
+        logResponseStatusCode(response);
+
+        return responseHandler.deserialize(response.body(), Search.class);
     }
 
     /**
@@ -96,10 +107,13 @@ public class HotspotsCalls extends BaseCalls {
      * @param hotSpotKey
      * @return API Response
      */
-    public HttpResponse<String> show(String hotSpotKey) {
+    public Show show(String hotSpotKey) {
         URI uri = URI.create(baseUrl + API_HOTSPOTS_SHOW)
                 .resolve("?" + HOTSPOT_PARAM + hotSpotKey);
 
-        return simpleRequest.sendGetRequest(uri);
+        HttpResponse<String> response = simpleRequest.sendGetRequest(uri);
+        logResponseStatusCode(response);
+
+       return responseHandler.deserialize(response.body(), Show.class);
     }
 }

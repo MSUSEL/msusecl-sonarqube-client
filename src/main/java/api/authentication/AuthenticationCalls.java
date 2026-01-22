@@ -25,6 +25,7 @@ package api.authentication;
 
 import api.BaseCalls;
 import api.SimpleRequest;
+import api.authentication.responseObjects.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,25 +53,28 @@ public class AuthenticationCalls extends BaseCalls {
      * @param password SonarQube password
      * @return API Response
      */
-    public HttpResponse<String> login(String username, String password) {
+    public boolean login(String username, String password) {
         String formData = LOGIN_PARAM + username + "&" + PASSWORD_PARAM + password;
-        return simpleRequest.sendPostRequest(formData, API_AUTHENTICATION_LOGIN);
+
+        return responseHandler.checkSuccess(simpleRequest.sendPostRequest(formData, API_AUTHENTICATION_LOGIN));
     }
 
     /**
      * Logout a user
      * @return API Response
      */
-    public HttpResponse<String> logout() {
-        return simpleRequest.sendPostRequest(API_AUTHENTICATION_LOGOUT);
+    public boolean logout() {
+        return responseHandler.checkSuccess(simpleRequest.sendPostRequest(API_AUTHENTICATION_LOGOUT));
     }
 
     /**
      * Check credentials
      * @return API Response
      */
-    public HttpResponse<String> validate() {
+    public Validate validate() {
         URI uri = URI.create(baseUrl + API_AUTHENTICATION_VALIDATE);
-        return simpleRequest.sendGetRequest(uri);
+        HttpResponse<String> response = simpleRequest.sendGetRequest(uri);
+
+        return responseHandler.deserialize(response.body(), Validate.class);
     }
 }
