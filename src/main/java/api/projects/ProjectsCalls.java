@@ -70,12 +70,14 @@ public class ProjectsCalls extends BaseCalls {
      * @param projectKey
      * @param projectName
      */
-    public Create create(String projectKey, String projectName) {
+    public ProjectResponse create(String projectKey, String projectName) {
         String formData = PROJECT_PARAM + projectKey + "&" + NAME_PARAM + projectName;
         HttpResponse<String> response = simpleRequest.sendPostRequest(formData, API_PROJECTS_CREATE);
         logResponseStatusCode(response);
 
-        return responseHandler.deserialize(response.body(), Create.class);
+        ProjectResponse handledResponse = responseHandler.deserialize(response.body(), ProjectResponse.class);
+
+        return handledResponse;
     }
 
     /**

@@ -34,4 +34,5 @@ public class Create {
     private String key;
     private String name;
     private String qualifier;
+    private String visibility;
 }
