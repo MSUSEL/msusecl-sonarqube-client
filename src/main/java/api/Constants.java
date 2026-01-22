@@ -54,8 +54,13 @@ public class Constants {
     public static String API_HOTSPOTS_SEARCH = "/api/hotspots/search";
     public static String API_HOTSPOTS_SHOW = "/api/hotspots/show";
 
+    // api/rules endpoints
+    public static String API_RULES_SHOW = "/api/rules/show";
+
     // logging constants
     public static String REQUEST_FAILED = "The HTTP Request failed with the following error: ";
+    public static String BAD_STATUS_MESSAGE = "Request failed with status code: {}";
+    public static String GOOD_STATUS_MESSAGE = "Request succeeded with status code: {}";
 
     // request parameters
     public static String PROJECT_PARAM = "project=";
@@ -69,4 +74,5 @@ public class Constants {
     public static String PASSWORD_PARAM = "password=";
     public static String STATUS_PARAM = "status=";
     public static String HOTSPOT_PARAM = "hotspot=";
+    public static String RULES_PARAM = "key=";
 }

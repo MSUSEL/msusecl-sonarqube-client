@@ -22,28 +22,30 @@
  * SOFTWARE.
  */
 import api.projects.ProjectsCalls;
+import api.projects.responseObjects.ProjectResponse;
 import org.junit.jupiter.api.Test;
 
 import java.net.http.HttpClient;
-import java.net.http.HttpResponse;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ProjectsTests {
     String serverURL = System.getenv("SONAR_QUBE_SERVER");
-    String apiKey = System.getenv("SONAR_QUBE_KEY");
+    String apiKey = System.getenv("SONAR_QUBE_TOKEN");
     ProjectsCalls projectsCalls = new ProjectsCalls(HttpClient.newHttpClient(), serverURL, apiKey);
     String PROJECT_KEY = "test_project";
     String PROJECT_NAME = "test_project";
 
     @Test
     public void testCreate() {
-        HttpResponse<String> response = projectsCalls.create(PROJECT_KEY, PROJECT_NAME);
-        System.out.println(response.body());
-        assert response.statusCode() >= 200 && response.statusCode() < 300;
+        ProjectResponse response = projectsCalls.create(PROJECT_KEY, PROJECT_NAME);
+        assertEquals(PROJECT_KEY, response.getProject().getKey());
+        assertEquals(PROJECT_NAME, response.getProject().getName());
     }
 
     @Test
     public void testDelete() {
-        HttpResponse<String> response = projectsCalls.delete(PROJECT_KEY);
-        assert response.statusCode() >= 200 && response.statusCode() < 300;
+        boolean response = projectsCalls.delete(PROJECT_KEY);
+        assert response;
     }
 }

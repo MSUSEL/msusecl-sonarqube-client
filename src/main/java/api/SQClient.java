@@ -31,6 +31,7 @@ import api.projects.ProjectsCalls;
 import java.net.http.HttpClient;
 
 public class SQClient {
+    //TODO: Convert to interface so consuming programs can mock this one more easily
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final String baseUrl;
 
