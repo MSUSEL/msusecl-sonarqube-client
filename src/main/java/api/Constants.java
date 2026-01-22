@@ -59,6 +59,8 @@ public class Constants {
 
     // logging constants
     public static String REQUEST_FAILED = "The HTTP Request failed with the following error: ";
+    public static String BAD_STATUS_MESSAGE = "Request failed with status code: {}";
+    public static String GOOD_STATUS_MESSAGE = "Request succeeded with status code: {}";
 
     // request parameters
     public static String PROJECT_PARAM = "project=";

@@ -2,6 +2,7 @@ package api.rules;
 
 import api.BaseCalls;
 import api.SimpleRequest;
+import api.rules.responseObjects.Show;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -25,10 +26,12 @@ public class RulesCalls extends BaseCalls {
         this.simpleRequest = new SimpleRequest(httpClient, baseUrl, timeout);
     }
 
-    public HttpResponse<String> show(String ruleKey) {
+    public Show show(String ruleKey) {
         URI uri = URI.create(baseUrl + API_RULES_SHOW)
                 .resolve("?" + RULES_PARAM + ruleKey);
-
-        return simpleRequest.sendGetRequest(uri);
+        HttpResponse<String> response = simpleRequest.sendGetRequest(uri);
+        logResponseStatusCode(response);
+        
+        return responseHandler.deserialize(response.body(), Show.class);
     }
 }

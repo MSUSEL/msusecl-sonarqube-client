@@ -26,6 +26,7 @@ package api.issues;
 import api.AdvancedBuilderFacade;
 import api.BaseCalls;
 import api.SimpleRequest;
+import api.issues.responseObjects.Search;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,7 +78,10 @@ public class IssuesCalls extends BaseCalls {
      *      documentation here: <a href="https://next.sonarqube.com/sonarqube/web_api/api/issues">...</a>
      * @return API Response
      */
-    public HttpResponse<String> search(Map<String, String> params) {
-        return builderFacade.executeCall(params, API_ISSUES_SEARCH);
+    public Search search(Map<String, String> params) {
+        HttpResponse<String> response = builderFacade.executeCall(params, API_ISSUES_SEARCH);
+        logResponseStatusCode(response);
+
+        return responseHandler.deserialize(response.body(), Search.class);
     }
 }

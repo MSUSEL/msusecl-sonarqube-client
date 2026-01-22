@@ -30,14 +30,25 @@ import org.slf4j.LoggerFactory;
 
 import java.net.http.HttpResponse;
 
-public class ResponseHandler implements ISerializer {
+public class ResponseHandler implements IResponseHandler<String> {
     private static final Logger logger = LoggerFactory.getLogger(ResponseHandler.class);
     private final Gson gson = new Gson();
 
-    public boolean checkStatusCode(HttpResponse<String> response) {
+    // TODO: More robust error handling
+    @Override
+    public boolean checkSuccess(HttpResponse<String> response) {
         return response.statusCode() >= 200 && response.statusCode() < 300;
     }
 
+    @Override
+    public <T> T handleResponseBody(HttpResponse<String> response, Class<T> clazz) {
+        if (!checkSuccess(response)) {
+            return null;
+        }
+        return deserialize(response.body(), clazz);
+    }
+
+    @Override
     public <T> String serialize(T businessObj) {
         try {
             return gson.toJson(businessObj);
@@ -47,6 +58,7 @@ public class ResponseHandler implements ISerializer {
         }
     }
 
+    @Override
     public <T> T deserialize(String json, Class<T> clazz) {
         try {
             return gson.fromJson(json, clazz);

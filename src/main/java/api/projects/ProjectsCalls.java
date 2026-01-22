@@ -24,8 +24,8 @@
 package api.projects;
 
 import api.BaseCalls;
-import api.ResponseHandler;
 import api.SimpleRequest;
+import api.projects.responseObjects.*;
 
 import java.net.URI;
 import java.net.URLEncoder;
@@ -40,7 +40,6 @@ import static api.Constants.*;
  */
 public class ProjectsCalls extends BaseCalls {
     private final SimpleRequest simpleRequest;
-    private final ResponseHandler responseHandler = new ResponseHandler();
 
     public ProjectsCalls(HttpClient httpClient, String baseUrl, String token) {
         super(httpClient, baseUrl, token);
@@ -58,10 +57,12 @@ public class ProjectsCalls extends BaseCalls {
      * Deletes projects in bulk
      * @param projectKeys is a comma-separated list of project keys formatted as a single string
      */
-    public HttpResponse<String> bulkDelete(String projectKeys) {
+    public boolean bulkDelete(String projectKeys) {
         String formData = PROJECT_PARAM + projectKeys;
+        HttpResponse<String> response = simpleRequest.sendPostRequest(formData, API_PROJECTS_BULK_DELETE);
+        logResponseStatusCode(response);
 
-        return simpleRequest.sendPostRequest(formData, API_PROJECTS_BULK_DELETE);
+        return responseHandler.checkSuccess(response);
     }
 
     /**
@@ -69,10 +70,12 @@ public class ProjectsCalls extends BaseCalls {
      * @param projectKey
      * @param projectName
      */
-    public HttpResponse<String> create(String projectKey, String projectName) {
+    public Create create(String projectKey, String projectName) {
         String formData = PROJECT_PARAM + projectKey + "&" + NAME_PARAM + projectName;
+        HttpResponse<String> response = simpleRequest.sendPostRequest(formData, API_PROJECTS_CREATE);
+        logResponseStatusCode(response);
 
-        return simpleRequest.sendPostRequest(formData, API_PROJECTS_CREATE);
+        return responseHandler.deserialize(response.body(), Create.class);
     }
 
     /**
@@ -80,10 +83,12 @@ public class ProjectsCalls extends BaseCalls {
      * @param projectKey
      * @return API response
      */
-    public HttpResponse<String> delete(String projectKey) {
+    public boolean delete(String projectKey) {
         String formData = PROJECT_PARAM + projectKey;
+        HttpResponse<String> response = simpleRequest.sendPostRequest(formData, API_PROJECTS_DELETE);
+        logResponseStatusCode(response);
 
-        return simpleRequest.sendPostRequest(formData, API_PROJECTS_DELETE);
+        return responseHandler.checkSuccess(response);
     }
 
     /**
@@ -91,11 +96,13 @@ public class ProjectsCalls extends BaseCalls {
      * @param projectKey
      * @return API response
      */
-    public HttpResponse<String> exportFindings(String projectKey) {
+    public ExportFindingsResponse exportFindings(String projectKey) {
         URI uri = URI.create(baseUrl + API_PROJECTS_EXPORT_FINDINGS)
                 .resolve("?" + PROJECT_PARAM + URLEncoder.encode(projectKey, StandardCharsets.UTF_8));
+        HttpResponse<String> response = simpleRequest.sendGetRequest(uri);
+        logResponseStatusCode(response);
 
-        return simpleRequest.sendGetRequest(uri);
+        return responseHandler.deserialize(response.body(), ExportFindingsResponse.class);
     }
 
     /**
@@ -103,21 +110,26 @@ public class ProjectsCalls extends BaseCalls {
      * @param projectKey
      * @return API response
      */
-    public HttpResponse<String> getContainsAiCode(String projectKey) {
+    public ContainsAiCode getContainsAiCode(String projectKey) {
         URI uri = URI.create(baseUrl + API_PROJECTS_GET_CONTAINS_AI_CODE)
                 .resolve("?" + PROJECT_PARAM + projectKey);
 
-        return simpleRequest.sendGetRequest(uri);
+        HttpResponse<String> response = simpleRequest.sendGetRequest(uri);
+        logResponseStatusCode(response);
+
+        return responseHandler.deserialize(response.body(), ContainsAiCode.class);
     }
 
     /**
      * Gets license usage metadata broken down per project
      * @return API response
      */
-    public HttpResponse<String> licenseUsage() {
+    public LicenseUsage licenseUsage() {
         URI uri = URI.create(baseUrl + API_PROJECTS_LICENSE_USAGE);
+        HttpResponse<String> response = simpleRequest.sendGetRequest(uri);
+        logResponseStatusCode(response);
 
-        return simpleRequest.sendGetRequest(uri);
+        return responseHandler.deserialize(response.body(), LicenseUsage.class);
     }
 
     /**
@@ -125,11 +137,14 @@ public class ProjectsCalls extends BaseCalls {
      * @param projects comma-separated list of project keys formatted as a single String
      * @return API response
      */
-    public HttpResponse<String> search(String projects) {
+    public Search search(String projects) {
         URI uri = URI.create(baseUrl + API_PROJECTS_SEARCH)
                 .resolve("?" + PROJECTS_PARAM + projects);
 
-        return simpleRequest.sendGetRequest(uri);
+        HttpResponse<String> response = simpleRequest.sendGetRequest(uri);
+        logResponseStatusCode(response);
+
+        return responseHandler.deserialize(response.body(), Search.class);
     }
 
     /**
@@ -138,10 +153,12 @@ public class ProjectsCalls extends BaseCalls {
      * @param contains_ai_code true or false passed as a String
      * @return API response
      */
-    public HttpResponse<String> setContainsAiCode(String projectKey, String contains_ai_code) {
+    public boolean setContainsAiCode(String projectKey, String contains_ai_code) {
         String formData = PROJECT_PARAM + projectKey + "&" + CONTAINS_AI_CODE_PARAM + contains_ai_code;
+        HttpResponse<String> response = simpleRequest.sendPostRequest(formData, API_PROJECTS_SET_CONTAINS_AI_CODE);
+        logResponseStatusCode(response);
 
-        return simpleRequest.sendPostRequest(formData, API_PROJECTS_SET_CONTAINS_AI_CODE);
+        return responseHandler.checkSuccess(response);
     }
 
     /**
@@ -150,10 +167,11 @@ public class ProjectsCalls extends BaseCalls {
      * @param toKey
      * @return API response
      */
-    public HttpResponse<String> updateKey(String fromKey, String toKey) {
+    public boolean updateKey(String fromKey, String toKey) {
         String formData = FROM_PARAM + fromKey + "&" + TO_PARAM + toKey;
+        HttpResponse<String> response = simpleRequest.sendPostRequest(formData, API_PROJECTS_UPDATE_KEY);
 
-        return simpleRequest.sendPostRequest(formData, API_PROJECTS_UPDATE_KEY);
+        return responseHandler.checkSuccess(response);
     }
 
     /**
