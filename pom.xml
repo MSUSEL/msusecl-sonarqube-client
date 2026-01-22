@@ -146,7 +146,7 @@
         <repository>
             <id>msusel-maven-repo</id>
             <name>msusel-maven-repo</name>
-            <url>git:releases://git@github.com:MSUSEL/msusel-maven-repo.git</url>
+            <url>git:master://git@github.com:MSUSEL/msusel-maven-repo.git</url>
         </repository>
     </distributionManagement>
 
