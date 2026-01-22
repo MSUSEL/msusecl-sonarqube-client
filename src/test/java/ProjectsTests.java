@@ -22,10 +22,12 @@
  * SOFTWARE.
  */
 import api.projects.ProjectsCalls;
+import api.projects.responseObjects.Create;
 import org.junit.jupiter.api.Test;
 
 import java.net.http.HttpClient;
-import java.net.http.HttpResponse;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ProjectsTests {
     String serverURL = System.getenv("SONAR_QUBE_SERVER");
@@ -36,15 +38,14 @@ public class ProjectsTests {
 
     @Test
     public void testCreate() {
-        HttpResponse<String> response = projectsCalls.create(PROJECT_KEY, PROJECT_NAME);
-        System.out.println(response.body());
-        String body = response.body();
-        assert response.statusCode() >= 200 && response.statusCode() < 300;
+        Create response = projectsCalls.create(PROJECT_KEY, PROJECT_NAME);
+        assertEquals(PROJECT_KEY, response.getKey());
+        assertEquals(PROJECT_NAME, response.getName());
     }
 
     @Test
     public void testDelete() {
-        HttpResponse<String> response = projectsCalls.delete(PROJECT_KEY);
-        assert response.statusCode() >= 200 && response.statusCode() < 300;
+        boolean response = projectsCalls.delete(PROJECT_KEY);
+        assert response;
     }
 }
