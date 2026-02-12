@@ -26,6 +26,7 @@ package api;
 import api.hotspots.HotspotsCalls;
 import api.issues.IssuesCalls;
 import api.projects.ProjectsCalls;
+import api.rules.RulesCalls;
 
 import java.net.http.HttpClient;
 
@@ -49,5 +50,9 @@ public class SQClientWithToken {
 
     public ProjectsCalls newProjectsCalls() {
         return new ProjectsCalls(httpClient, baseUrl, token);
+    }
+
+    public RulesCalls rulesCalls() {
+        return new RulesCalls(httpClient, baseUrl, token);
     }
 }

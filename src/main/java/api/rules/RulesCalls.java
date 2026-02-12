@@ -27,8 +27,7 @@ public class RulesCalls extends BaseCalls {
     }
 
     public Show show(String ruleKey) {
-        URI uri = URI.create(baseUrl + API_RULES_SHOW)
-                .resolve("?" + RULES_PARAM + ruleKey);
+        URI uri = URI.create(baseUrl + API_RULES_SHOW + "?" + RULES_PARAM + ruleKey);
         HttpResponse<String> response = simpleRequest.sendGetRequest(uri);
         logResponseStatusCode(response);
 
