@@ -147,7 +147,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/MSUSEL/msusecl-sonarqube-client.git</url>
+            <url>https://maven.pkg.github.com/MSUSEL/msusecl-sonarqube-client</url>
         </repository>
     </distributionManagement>
 
