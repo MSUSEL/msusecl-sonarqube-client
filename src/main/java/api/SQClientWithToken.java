@@ -52,7 +52,7 @@ public class SQClientWithToken {
         return new ProjectsCalls(httpClient, baseUrl, token);
     }
 
-    public RulesCalls rulesCalls() {
+    public RulesCalls newRulesCalls() {
         return new RulesCalls(httpClient, baseUrl, token);
     }
 }
