@@ -25,14 +25,12 @@ package api.issues;
 
 import api.AdvancedBuilderFacade;
 import api.BaseCalls;
+import api.DataTransferWrapper;
 import api.SimpleRequest;
 import api.issues.responseObjects.Search;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
-import java.util.HashMap;
 import java.util.Map;
 
 import static api.Constants.API_ISSUES_SEARCH;
@@ -42,9 +40,7 @@ import static api.Constants.API_ISSUES_SEARCH;
  * NOTE: currently only the search endpoint is implemented
  */
 public class IssuesCalls extends BaseCalls {
-    private static final Logger logger = LoggerFactory.getLogger(IssuesCalls.class);
     private final SimpleRequest simpleRequest;
-    private final Map<String, String> parameters = new HashMap<>();
     private final AdvancedBuilderFacade builderFacade;
 
     /**
@@ -73,15 +69,15 @@ public class IssuesCalls extends BaseCalls {
     }
 
     /**
+     * GET
      * Hits the api/issues/search endpoint
      * @param params Map of key, value pairs corresponding to SonarQube search parameters
      *      documentation here: <a href="https://next.sonarqube.com/sonarqube/web_api/api/issues">...</a>
      * @return API Response
      */
-    public Search search(Map<String, String> params) {
+    public DataTransferWrapper<Search> search(Map<String, String> params) {
         HttpResponse<String> response = builderFacade.executeCall(params, API_ISSUES_SEARCH);
-        logResponseStatusCode(response);
 
-        return responseHandler.deserialize(response.body(), Search.class);
+        return responseHandler.handleResponse(response, Search.class);
     }
 }

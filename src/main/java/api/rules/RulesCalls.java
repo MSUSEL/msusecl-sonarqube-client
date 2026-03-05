@@ -1,6 +1,7 @@
 package api.rules;
 
 import api.BaseCalls;
+import api.DataTransferWrapper;
 import api.SimpleRequest;
 import api.rules.responseObjects.Show;
 
@@ -26,11 +27,17 @@ public class RulesCalls extends BaseCalls {
         this.simpleRequest = new SimpleRequest(httpClient, baseUrl, timeout);
     }
 
-    public Show show(String ruleKey) {
+    /**
+     * GET
+     * fetches the rules findings from sonarqube server
+     * @param ruleKey
+     * @return
+     */
+    public DataTransferWrapper<Show> show(String ruleKey) {
         URI uri = URI.create(baseUrl + API_RULES_SHOW + "?" + RULES_PARAM + ruleKey);
         HttpResponse<String> response = simpleRequest.sendGetRequest(uri);
-        logResponseStatusCode(response);
 
-        return responseHandler.deserialize(response.body(), Show.class);
+        return responseHandler.handleResponse(response, Show.class);
+
     }
 }

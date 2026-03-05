@@ -24,6 +24,7 @@
 package api.projects;
 
 import api.BaseCalls;
+import api.DataTransferWrapper;
 import api.SimpleRequest;
 import api.projects.responseObjects.*;
 
@@ -54,84 +55,83 @@ public class ProjectsCalls extends BaseCalls {
     }
 
     /**
+     * POST
      * Deletes projects in bulk
      * @param projectKeys is a comma-separated list of project keys formatted as a single string
      */
-    public boolean bulkDelete(String projectKeys) {
+    public int bulkDelete(String projectKeys) {
         String formData = PROJECT_PARAM + projectKeys;
         HttpResponse<String> response = simpleRequest.sendPostRequest(formData, API_PROJECTS_BULK_DELETE);
-        logResponseStatusCode(response);
 
-        return responseHandler.checkSuccess(response);
+        return responseHandler.handleResponse(response);
     }
 
     /**
+     * POST
      * Creates a sonarQube project with the given project key and name
      * @param projectKey
      * @param projectName
      */
-    public ProjectResponse create(String projectKey, String projectName) {
+    public DataTransferWrapper<ProjectResponse> create(String projectKey, String projectName) {
         String formData = PROJECT_PARAM + projectKey + "&" + NAME_PARAM + projectName;
         HttpResponse<String> response = simpleRequest.sendPostRequest(formData, API_PROJECTS_CREATE);
-        logResponseStatusCode(response);
 
-        ProjectResponse handledResponse = responseHandler.deserialize(response.body(), ProjectResponse.class);
-
-        return handledResponse;
+        return responseHandler.handleResponse(response, ProjectResponse.class);
     }
 
     /**
+     * POST
      * Deletes a single, specified project
      * @param projectKey
      * @return API response
      */
-    public boolean delete(String projectKey) {
+    public int delete(String projectKey) {
         String formData = PROJECT_PARAM + projectKey;
         HttpResponse<String> response = simpleRequest.sendPostRequest(formData, API_PROJECTS_DELETE);
-        logResponseStatusCode(response);
 
-        return responseHandler.checkSuccess(response);
+        return responseHandler.handleResponse(response);
     }
 
     /**
+     * GET
      * Exports all findings of a specific project branch
      * @param projectKey
      * @return API response
      */
-    public ExportFindingsResponse exportFindings(String projectKey) {
+    public DataTransferWrapper<ExportFindingsResponse> exportFindings(String projectKey) {
         URI uri = URI.create(baseUrl + API_PROJECTS_EXPORT_FINDINGS)
                 .resolve("?" + PROJECT_PARAM + URLEncoder.encode(projectKey, StandardCharsets.UTF_8));
         HttpResponse<String> response = simpleRequest.sendGetRequest(uri);
-        logResponseStatusCode(response);
 
-        return responseHandler.deserialize(response.body(), ExportFindingsResponse.class);
+        return responseHandler.handleResponse(response, ExportFindingsResponse.class);
     }
 
     /**
+     * GET
      * Gets a boolean value for whether the project contains AI code
      * @param projectKey
      * @return API response
      */
-    public ContainsAiCode getContainsAiCode(String projectKey) {
+    public DataTransferWrapper<ContainsAiCode> getContainsAiCode(String projectKey) {
         URI uri = URI.create(baseUrl + API_PROJECTS_GET_CONTAINS_AI_CODE)
                 .resolve("?" + PROJECT_PARAM + projectKey);
 
         HttpResponse<String> response = simpleRequest.sendGetRequest(uri);
-        logResponseStatusCode(response);
 
-        return responseHandler.deserialize(response.body(), ContainsAiCode.class);
+        return responseHandler.handleResponse(response, ContainsAiCode.class);
+
     }
 
     /**
+     * GET
      * Gets license usage metadata broken down per project
      * @return API response
      */
-    public LicenseUsage licenseUsage() {
+    public DataTransferWrapper<LicenseUsage> licenseUsage() {
         URI uri = URI.create(baseUrl + API_PROJECTS_LICENSE_USAGE);
         HttpResponse<String> response = simpleRequest.sendGetRequest(uri);
-        logResponseStatusCode(response);
 
-        return responseHandler.deserialize(response.body(), LicenseUsage.class);
+        return responseHandler.handleResponse(response, LicenseUsage.class);
     }
 
     /**
@@ -139,52 +139,54 @@ public class ProjectsCalls extends BaseCalls {
      * @param projects comma-separated list of project keys formatted as a single String
      * @return API response
      */
-    public Search search(String projects) {
+    public DataTransferWrapper<Search> search(String projects) {
         URI uri = URI.create(baseUrl + API_PROJECTS_SEARCH)
                 .resolve("?" + PROJECTS_PARAM + projects);
 
         HttpResponse<String> response = simpleRequest.sendGetRequest(uri);
-        logResponseStatusCode(response);
 
-        return responseHandler.deserialize(response.body(), Search.class);
+        return responseHandler.handleResponse(response, Search.class);
     }
 
     /**
+     * POST
      * Sets the contains ai code value in a project's metadata
      * @param projectKey
      * @param contains_ai_code true or false passed as a String
      * @return API response
      */
-    public boolean setContainsAiCode(String projectKey, String contains_ai_code) {
+    public int setContainsAiCode(String projectKey, String contains_ai_code) {
         String formData = PROJECT_PARAM + projectKey + "&" + CONTAINS_AI_CODE_PARAM + contains_ai_code;
         HttpResponse<String> response = simpleRequest.sendPostRequest(formData, API_PROJECTS_SET_CONTAINS_AI_CODE);
-        logResponseStatusCode(response);
 
-        return responseHandler.checkSuccess(response);
+        return responseHandler.handleResponse(response);
     }
 
     /**
+     * POST
      * Update a project's subcomponent's keys
      * @param fromKey
      * @param toKey
      * @return API response
      */
-    public boolean updateKey(String fromKey, String toKey) {
+    public int updateKey(String fromKey, String toKey) {
         String formData = FROM_PARAM + fromKey + "&" + TO_PARAM + toKey;
         HttpResponse<String> response = simpleRequest.sendPostRequest(formData, API_PROJECTS_UPDATE_KEY);
 
-        return responseHandler.checkSuccess(response);
+        return responseHandler.handleResponse(response);
     }
 
     /**
+     * POST
      * Updates visibility of a project, application, or a portfolio
      * @param projectKey
      * @param visibility
      * @return API response
      */
-    public HttpResponse<String> updateVisibility(String projectKey, String visibility) {
+    public int updateVisibility(String projectKey, String visibility) {
         String formData = PROJECT_PARAM + projectKey + "&" + VISIBILITY_PARAM + visibility;
+        HttpResponse<String> response = simpleRequest.sendPostRequest(formData, API_PROJECTS_UPDATE_VISIBILITY);
 
-        return simpleRequest.sendPostRequest(formData, API_PROJECTS_UPDATE_VISIBILITY);
+        return responseHandler.handleResponse(response);
     }
 }

@@ -30,40 +30,61 @@ import org.slf4j.LoggerFactory;
 
 import java.net.http.HttpResponse;
 
+import static api.Constants.BAD_STATUS_MESSAGE;
+import static api.Constants.GOOD_STATUS_MESSAGE;
+
 public class ResponseHandler implements IResponseHandler<String> {
-    private static final Logger logger = LoggerFactory.getLogger(ResponseHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ResponseHandler.class);
     private final Gson gson = new Gson();
 
-    // TODO: More robust error handling
+    @Override
+    public <U> DataTransferWrapper<U> handleResponse(HttpResponse<String> response, Class<U> clazz) {
+        U responseObject = null;
+
+        if (checkSuccess(response)) {
+            responseObject = deserialize(response.body(), clazz);
+        }
+
+        return new DataTransferWrapper<>(response.statusCode(), responseObject);
+    }
+
+    @Override
+    public int handleResponse(HttpResponse<String> response) {
+        checkSuccess(response);
+
+        return response.statusCode();
+    }
+
     @Override
     public boolean checkSuccess(HttpResponse<String> response) {
-        return response.statusCode() >= 200 && response.statusCode() < 300;
-    }
+        int statusCode = response.statusCode();
+        boolean success = statusCode >= 200 && statusCode < 300;
 
-    @Override
-    public <T> T handleResponseBody(HttpResponse<String> response, Class<T> clazz) {
-        if (!checkSuccess(response)) {
-            return null;
+        if (success) {
+            LOGGER.info(GOOD_STATUS_MESSAGE, statusCode);
+        } else {
+            LOGGER.error(BAD_STATUS_MESSAGE, statusCode);
         }
-        return deserialize(response.body(), clazz);
+
+        return success;
     }
 
     @Override
-    public <T> String serialize(T businessObj) {
+    public <U> String serialize(U businessObj) {
         try {
             return gson.toJson(businessObj);
         } catch (JsonSyntaxException e) {
-            logger.error("Could not parse object to json.", e);
+            LOGGER.error("Could not parse object to json.", e);
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public <T> T deserialize(String json, Class<T> clazz) {
+    public <U> U deserialize(String json, Class<U> clazz) {
         try {
             return gson.fromJson(json, clazz);
         } catch (JsonSyntaxException e) {
-            logger.error("Could not parse json to object", e);
+            LOGGER.error("Could not parse json to object", e);
             throw new RuntimeException(e);
         }
     }

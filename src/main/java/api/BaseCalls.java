@@ -23,15 +23,9 @@
  */
 package api;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.net.http.HttpClient;
-import java.net.http.HttpResponse;
 import java.time.Duration;
 
-import static api.Constants.BAD_STATUS_MESSAGE;
-import static api.Constants.GOOD_STATUS_MESSAGE;
 
 public class BaseCalls {
     protected final HttpClient httpClient;
@@ -39,7 +33,6 @@ public class BaseCalls {
     protected String token = "";
     protected final Duration timeout = Duration.ofSeconds(30);
     protected final IResponseHandler<String> responseHandler = new ResponseHandler();
-    protected static final Logger LOGGER = LoggerFactory.getLogger(BaseCalls.class);
 
     public BaseCalls(HttpClient httpClient, String baseUrl, String token) {
         this.httpClient = httpClient;
@@ -50,13 +43,5 @@ public class BaseCalls {
     public BaseCalls(HttpClient httpClient, String baseUrl) {
         this.httpClient = httpClient;
         this.baseUrl = baseUrl;
-    }
-
-    public void logResponseStatusCode(HttpResponse<String> response) {
-        if (!responseHandler.checkSuccess(response)) {
-            LOGGER.error(BAD_STATUS_MESSAGE, response.statusCode());
-        } else {
-            LOGGER.info(GOOD_STATUS_MESSAGE, response.statusCode());
-        }
     }
 }

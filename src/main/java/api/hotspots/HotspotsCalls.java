@@ -25,6 +25,7 @@ package api.hotspots;
 
 import api.AdvancedBuilderFacade;
 import api.BaseCalls;
+import api.DataTransferWrapper;
 import api.SimpleRequest;
 import api.hotspots.responseObjects.Search;
 import api.hotspots.responseObjects.Show;
@@ -72,48 +73,49 @@ public class HotspotsCalls extends BaseCalls {
     }
 
     /**
+     * POST
      * Change the status of a Security Hotspot
      * Requires the 'Administer Security Hotspot' permission
      * @param hotspotKey
      * @param newStatus
      * @return API response
      */
-    public boolean changeStatus(String hotspotKey, String newStatus) {
+    public int changeStatus(String hotspotKey, String newStatus) {
         String formData = STATUS_PARAM + newStatus;
 
         HttpResponse<String> response = simpleRequest.sendPostRequest(formData, API_HOTSPOTS_CHANGE_STATUS);
-        logResponseStatusCode(response);
 
-        return responseHandler.checkSuccess(response);
+       return responseHandler.handleResponse(response);
+
     }
 
     /**
+     * GET
      * Search for Security Hotspots
      * @param params a map of search parameters and their values
      *               Documentation: <a href="https://next.sonarqube.com/sonarqube/web_api/api/hotspots">...</a>
      * @return API response
      */
-    public Search search(Map<String, String> params) {
+    public DataTransferWrapper<Search> search(Map<String, String> params) {
         params.put("method", "POST");
 
         HttpResponse<String> response = builderFacade.executeCall(params, API_HOTSPOTS_SEARCH);
-        logResponseStatusCode(response);
 
-        return responseHandler.deserialize(response.body(), Search.class);
+        return responseHandler.handleResponse(response, Search.class);
     }
 
     /**
+     * GET
      * Provides the details of a Security Hotspot
      * @param hotSpotKey
      * @return API Response
      */
-    public Show show(String hotSpotKey) {
+    public DataTransferWrapper<Show> show(String hotSpotKey) {
         URI uri = URI.create(baseUrl + API_HOTSPOTS_SHOW)
                 .resolve("?" + HOTSPOT_PARAM + hotSpotKey);
 
         HttpResponse<String> response = simpleRequest.sendGetRequest(uri);
-        logResponseStatusCode(response);
 
-       return responseHandler.deserialize(response.body(), Show.class);
+       return responseHandler.handleResponse(response, Show.class);
     }
 }
