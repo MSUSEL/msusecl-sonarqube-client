@@ -25,24 +25,35 @@ import api.issues.IssuesCalls;
 import api.issues.responseObjects.Search;
 import api.projects.ProjectsCalls;
 import api.projects.responseObjects.ProjectResponse;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.net.http.HttpClient;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProjectsTests {
     String serverURL = System.getenv("SONAR_QUBE_SERVER");
     String apiKey = System.getenv("SONAR_QUBE_TOKEN");
     ProjectsCalls projectsCalls = new ProjectsCalls(HttpClient.newHttpClient(), serverURL, apiKey);
     IssuesCalls issuesCalls = new IssuesCalls(HttpClient.newHttpClient(), System.getenv("SONAR_QUBE_SERVER"), System.getenv("SONAR_QUBE_TOKEN"));
-    //String PROJECT_KEY = "test_project";
-    String PROJECT_KEY = "ocpp-cpp-master";
+    String PROJECT_KEY = "test_project_" + System.currentTimeMillis();
     String PROJECT_NAME = "test_project";
 
+    @AfterEach
+    public void cleanup() {
+        try {
+            projectsCalls.delete(PROJECT_KEY);
+        } catch (Exception e) {
+            // If project does not exist, ignore
+        }
+    }
+
     @Test
+    @Order(1)
     public void testCreate() {
         ProjectResponse response = projectsCalls.create(PROJECT_KEY, PROJECT_NAME);
 
@@ -51,8 +62,11 @@ public class ProjectsTests {
     }
 
     @Test
+    @Order(2)
     public void testDelete() {
+        projectsCalls.create(PROJECT_KEY, PROJECT_NAME);
+        
         boolean response = projectsCalls.delete(PROJECT_KEY);
-        assert response;
+        assertTrue(response);
     }
 }
