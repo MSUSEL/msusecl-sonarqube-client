@@ -1,12 +1,19 @@
 package api.projects.responseObjects;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class ProjectResponse {
     private Create project;
+    
+    public ProjectResponse() {}
+    
+    public ProjectResponse(Create project) {
+        this.project = project;
+    }
+    
+    public Create getProject() {
+        return project;
+    }
+    
+    public void setProject(Create project) {
+        this.project = project;
+    }
 }
